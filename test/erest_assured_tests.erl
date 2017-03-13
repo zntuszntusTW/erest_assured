@@ -162,7 +162,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate body equal_to right tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:body(erest_assured:equal_to(?Body))] ))(?Describe, Response) )},
-      {should_be, {ok, {?Describe, "should be equal with expected value", ?Body, ?Body}}}
+      {should_be, ok}
     ]},
     {?LINE, [
       {describe, "generate body equal_to wrong tester"},
@@ -172,7 +172,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate is_json tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:body(erest_assured:is_json())] ))(?Describe, ResponseJSON) )},
-      {should_be, {ok, {?Describe, "should be JSON", ?JSONBody}}}
+      {should_be, ok}
     ]},
     {?LINE, [
       {describe, "generate is_json wrong tester"},
@@ -182,7 +182,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate json equal_to right tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:equal_to("key", <<"abcd">>))] ))(?Describe, ResponseJSON) )},
-      {should_be, {ok, {?Describe, "key should be equal with expected value", <<"abcd">>, <<"abcd">>}}}
+      {should_be, ok}
     ]},
     {?LINE, [
       {describe, "generate json equal_to wrong tester"},
@@ -192,7 +192,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate json should_be_string right tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:should_be_string("key"))] ))(?Describe, ResponseJSON) )},
-      {should_be, {ok, {?Describe, "key should be string", <<"abcd">>}}}
+      {should_be, ok}
     ]},
     {?LINE, [
       {describe, "generate json should_be_string wrong tester"},
@@ -202,7 +202,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate json should_be_integer right tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:should_be_integer("key"))] ))(?Describe, ResponseJSONInteger) )},
-      {should_be, {ok, {?Describe, "key should be integer", 123}}}
+      {should_be, ok}
     ]},
     {?LINE, [
       {describe, "generate json should_be_integer wrong tester"},
@@ -212,7 +212,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate json should_be_float right tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:should_be_float("key"))] ))(?Describe, ResponseJSONFloat) )},
-      {should_be, {ok, {?Describe, "key should be float", 123.4}}}
+      {should_be, ok}
     ]},
     {?LINE, [
       {describe, "generate json should_be_float wrong tester"},
@@ -222,12 +222,12 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate json should_be_number right when integer tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:should_be_number("key"))] ))(?Describe, ResponseJSONInteger) )},
-      {should_be, {ok, {?Describe, "key should be number", 123}}}
+      {should_be, ok}
     ]},
     {?LINE, [
       {describe, "generate json should_be_number right when float tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:should_be_number("key"))] ))(?Describe, ResponseJSONFloat) )},
-      {should_be, {ok, {?Describe, "key should be number", 123.4}}}
+      {should_be, ok}
     ]},
     {?LINE, [
       {describe, "generate json should_be_number wrong tester"},
@@ -237,7 +237,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate json has_key right tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:has_key("key"))] ))(?Describe, ResponseJSON) )},
-      {should_be, {ok, {?Describe, "key should be exist"}}}
+      {should_be, ok}
     ]},
     {?LINE, [
       {describe, "generate json has_key wrong tester"},
@@ -247,7 +247,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate json has_key nested key tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:has_key("key.nested"))] ))(?Describe, ResponseJSONNested) )},
-      {should_be, {ok, {?Describe, "key.nested should be exist"}}}
+      {should_be, ok}
     ]}
   ]).
 
@@ -269,6 +269,6 @@ erest_assured_tests(_) ->
         { fun erest_request:execute/1,
           [ {parameter_should_be, [Request]},
             {with_return, Response }] }},
-      {should_be, {ok, {?Describe, "should be equal with expected value", ?Body, ?Body}}}
+      {should_be, ok}
     ]}
   ]).

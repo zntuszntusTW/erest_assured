@@ -79,17 +79,20 @@ request(Requester) -> Requester.
 -spec then(asserts()) -> function().
 then(Asserts) when is_list(Asserts) ->
   fun(Describe, Response) ->
-    lists:foldl(
-      fun
-        (Assert, {ok, _}) ->
-          R = Assert(Describe, Response),
-          print_assert(R);
-        (_Assert, Fail) ->
-          Fail
-      end,
-      {ok, {}},
-      Asserts
-    )
+    Result =
+      lists:foldl(
+        fun
+          (Assert, {ok, _}) -> Assert(Describe, Response);
+          (_Assert, Fail)   -> Fail
+        end,
+        {ok, {}},
+        Asserts
+      ),
+    print_assert(Result),
+    case Result of
+      {ok, _} -> ok;
+      _ -> Result
+    end
   end.
 
 -spec param(atom(), bitstring()) -> giver().
@@ -230,7 +233,7 @@ print_assert({ok, {Describe, _Msg, _Value, _}} = Assert) ->
   print_assert({ok, {Describe, _Msg, _Value}}),
   Assert;
 print_assert({fail, {Describe,  Msg}} = Assert) ->
-  io:format("~s ~s but failed !!~n", [Describe, Msg]),
+  io:format("~s ~s !!~n", [Describe, Msg]),
   Assert;
 print_assert({fail, {Describe,  Msg, Value}} = Assert) ->
   print_assert({fail, {Describe,  Msg}}),
