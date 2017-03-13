@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 03. 3월 2017 오전 10:15
 %%%-------------------------------------------------------------------
-{application, erest_assured_app, [
+{application, erest_assured, [
   {description, ""},
   {vsn, "1"},
   {registered, []},
@@ -14,6 +14,7 @@
     kernel,
     stdlib,
     crypto,
+    asn1,
     public_key,
     ssl,
     xmerl,
@@ -22,6 +23,6 @@
     base16,
     lhttpc
   ]},
-  {mod, {erest_assured_app, []}},
+  {modules, []},
   {env, []}
 ]}.

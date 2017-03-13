@@ -9,6 +9,8 @@
 -module(erest_assured).
 -author("zntuszntus").
 
+-define(APP, erest_assured).
+
 -type giver() :: function().
 -type givers() :: list(giver()).
 -type requester() :: function().
@@ -16,6 +18,8 @@
 -type asserts() :: list(assert()).
 -type tester() :: function().
 -type assured() :: ok | term().
+
+-export([start/0, start/1]).
 
 -export([
   assured/4,
@@ -39,6 +43,15 @@
 -export([
   equal_to/1
 ]).
+
+start() ->
+  application:load(?APP),
+  {ok, Apps} = application:get_key(?APP, applications),
+  [application:start(App) || App <- Apps],
+  application:start(?APP).
+
+start(App) ->
+  application:start(App, permanent).
 
 -spec assured(bitstring(), function(), function(), function()) -> assured().
 assured(Describe, Given, Requester, Then) ->
