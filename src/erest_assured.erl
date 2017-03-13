@@ -90,7 +90,7 @@ then(Asserts) when is_list(Asserts) ->
       ),
     print_assert(Result),
     case Result of
-      {ok, _} -> ok;
+      {ok, _} -> {ok, Response};
       _ -> Result
     end
   end.
@@ -224,7 +224,7 @@ assert_it(Describe, Msg, Expected, Value, true) -> {ok, {Describe, Msg, Expected
 assert_it(Describe, Msg, Expected, Value, false) -> {fail, {Describe, Msg, Expected, Value}}.
 
 print_assert({ok, {Describe, _}} = Assert) ->
-  io:format("~s success~n", [Describe]),
+  io:format("~s test passed~n", [Describe]),
   Assert;
 print_assert({ok, {Describe, _Msg, _}} = Assert) ->
   print_assert({ok, {Describe, _Msg}}),
@@ -237,11 +237,12 @@ print_assert({fail, {Describe,  Msg}} = Assert) ->
   Assert;
 print_assert({fail, {Describe,  Msg, Value}} = Assert) ->
   print_assert({fail, {Describe,  Msg}}),
-  io:format("Value: ~p~n", [Value]),
+  io:format("  - Value: ~p~n", [Value]),
   Assert;
 print_assert({fail, {Describe,  Msg, Expected, Value}} = Assert) ->
   print_assert({fail, {Describe,  Msg}}),
-  io:format("Expected: ~p~nValue: ~p~n", [Expected, Value]),
+  io:format("  - Expected: ~p~n", [Value]),
+  io:format("  - Value: ~p~n", [Value]),
   Assert.
 
 get_value_by_json_path(JSON, Path) ->
