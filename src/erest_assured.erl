@@ -135,7 +135,7 @@ body(Tester) ->
 -spec equal_to(term()) -> tester().
 equal_to(Expected) ->
   fun(Describe, Value) ->
-    assert_it(Describe, "should be equal", Expected, Value, Expected =:= Value)
+    assert_it(Describe, "should be equal with expected value", Expected, Value, Expected =:= Value)
   end.
 
 %%
@@ -153,9 +153,9 @@ assert_it(Describe, Msg, Expected, Value, true) -> {ok, {Describe, Msg, Expected
 assert_it(Describe, Msg, Expected, Value, false) -> {fail, {Describe, Msg, Expected, Value}}.
 
 print_assert({ok, {Describe, _, _, _}} = Assert) ->
-  io:format("~s success", [Describe]),
+  io:format("~s success~n", [Describe]),
   Assert;
 print_assert({fail, {Describe,  Msg, Expected, Value}} = Assert) ->
-  io:format("~s ~s but fail !!", [Describe, Msg]),
-  io:format("Expected: ~p\n\rActual: ~p", [Expected, Value]),
+  io:format("~s ~s but failed !!~n", [Describe, Msg]),
+  io:format("Expected: ~p\n\rValue: ~p~n", [Expected, Value]),
   Assert.
