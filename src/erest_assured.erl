@@ -241,7 +241,7 @@ print_assert({fail, {Describe,  Msg, Value}} = Assert) ->
   Assert;
 print_assert({fail, {Describe,  Msg, Expected, Value}} = Assert) ->
   print_assert({fail, {Describe,  Msg}}),
-  io:format("  - Expected: ~p~n", [Value]),
+  io:format("  - Expected: ~p~n", [Expected]),
   io:format("  - Value: ~p~n", [Value]),
   Assert.
 
