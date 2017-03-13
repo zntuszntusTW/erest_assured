@@ -142,7 +142,7 @@ execute(Request) ->
       Response  = erest_response:body(Body, Response2),
       Response;
     _ ->
-      {error, unknown}
+      {error, Result}
   end.
 
 %%
