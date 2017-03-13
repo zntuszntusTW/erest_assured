@@ -13,6 +13,8 @@
 -include("../src/erest_request.hrl").
 
 -define(_f(F), fun() -> F end).
+-define(HOST, "my.test.domain").
+-define(PORT, 6060).
 -define(PATH, "/test/api").
 -define(ParamKey, test).
 -define(ParamValue, <<"value">>).
@@ -122,19 +124,25 @@ requester_tests(_) ->
 
 
 giver_tests(_) ->
-  Response0 = erest_response:new(),
-  Response  = erest_response:body(?Body, Response0),
-  Request = #request{parameters = {parameters, [{?ParamKey, ?ParamValue}]} },
+  RequestParam = #request{parameters = {parameters, [{?ParamKey, ?ParamValue}]} },
+  RequestHost  = #request{host = ?HOST },
+  RequestPort  = #request{port = ?PORT },
 
   etest:tests([
     {?LINE, [
       {describe, "generate parameter giver"},
       {run, ?_f( (erest_assured:given( [erest_assured:param(?ParamKey, ?ParamValue)] ))(#request{}) )},
-      {with_call,
-        { fun erest_request:execute/1,
-          [ {parameter_should_be, [Request]},
-            {with_return, Response }] }},
-      {should_be, Request}
+      {should_be, RequestParam}
+    ]},
+    {?LINE, [
+      {describe, "generate host giver"},
+      {run, ?_f( (erest_assured:given( [erest_assured:host(?HOST)] ))(#request{}) )},
+      {should_be, RequestHost}
+    ]},
+    {?LINE, [
+      {describe, "generate port giver"},
+      {run, ?_f( (erest_assured:given( [erest_assured:port(?PORT)] ))(#request{}) )},
+      {should_be, RequestPort}
     ]}
   ]).
 

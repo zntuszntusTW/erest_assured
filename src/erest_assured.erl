@@ -29,7 +29,7 @@
 ]).
 
 -export([
-  param/2
+  param/2, host/1, port/1
 ]).
 
 -export([
@@ -94,6 +94,18 @@ then(Asserts) when is_list(Asserts) ->
 param(Param, Value) ->
   fun(Request) ->
     erest_request:add_parameter({Param, Value}, Request)
+  end.
+
+-spec host(string()) -> giver().
+host(Host) ->
+  fun(Request) ->
+    erest_request:host(Host, Request)
+  end.
+
+-spec port(pos_integer()) -> giver().
+port(Port) ->
+  fun(Request) ->
+    erest_request:port(Port, Request)
   end.
 
 -spec get(string()) -> requester().
