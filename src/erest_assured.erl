@@ -18,9 +18,11 @@
 -type asserts() :: list(assert()).
 -type tester() :: function().
 -type assured() :: ok | term().
+-type response() :: erest_response:response().
 
 -export([start/0, start/1]).
 
+%% export basic functions
 -export([
   assured/4,
   given/1,
@@ -28,22 +30,31 @@
   then/1
 ]).
 
+%% export givers
 -export([
   param/2, host/1, port/1
 ]).
 
+%% export requesters
 -export([
   get/1, post/1, put/1, option/1, delete/1, patch/1
 ]).
 
+%% export asserts
 -export([
   body/1, json/1
 ]).
 
+%% export testers
 -export([
   equal_to/1, equal_to/2, is_json/0,
   should_be_string/1, should_be_integer/1, should_be_float/1, should_be_number/1,
   has_key/1
+]).
+
+%% export getters
+-export([
+  get_body/1, get_json/1, get_value_from_json/2
 ]).
 
 start() ->
@@ -54,6 +65,10 @@ start() ->
 
 start(App) ->
   application:start(App, permanent).
+
+%%
+%% basic functions
+%%
 
 -spec assured(bitstring(), function(), function(), function()) -> assured().
 assured(Describe, Given, Requester, Then) ->
@@ -95,6 +110,10 @@ then(Asserts) when is_list(Asserts) ->
     end
   end.
 
+%%
+%% givers
+%%
+
 -spec param(atom(), bitstring()) -> giver().
 param(Param, Value) ->
   fun(Request) ->
@@ -131,17 +150,35 @@ delete(Path) -> gen_execute_request(delete, Path).
 -spec patch(string()) -> requester().
 patch(Path) -> gen_execute_request(patch, Path).
 
+%%
+%% asserts
+%%
+
 -spec body(tester()) -> assert().
 body(Tester) ->
   fun(Describe, Response) ->
     Tester(Describe, erest_response:body(Response))
   end.
 
+-spec json(tester()) -> assert().
+json(Tester) ->
+  fun(Describe, Response) ->
+    Tester(Describe, jsx:decode(erest_response:body(Response)))
+  end.
+
+%%
+%% testers for body
+%%
+
 -spec equal_to(term()) -> tester().
 equal_to(Expected) ->
   fun(Describe, Value) ->
     assert_it(Describe, "should be equal with expected value", Expected, Value, Expected =:= Value)
   end.
+
+%%
+%% testers for json
+%%
 
 -spec is_json() -> tester().
 is_json() ->
@@ -153,12 +190,6 @@ is_json() ->
         error:badarg -> false
       end,
     assert_it(Describe, "should be JSON", Value, Result)
-  end.
-
--spec json(tester()) -> assert().
-json(Tester) ->
-  fun(Describe, Response) ->
-    Tester(Describe, jsx:decode(erest_response:body(Response)))
   end.
 
 -spec equal_to(string(), term()) -> tester().
@@ -202,6 +233,23 @@ has_key(Key) ->
     Value = get_value_by_json_path(JSON, Key),
     assert_it(Describe, Key ++ " should be exist", Value =/= undefined)
   end.
+
+%%
+%% getters
+%%
+
+-spec get_body(response()) -> bitstring().
+get_body(Response) ->
+  erest_response:body(Response).
+
+-spec get_json(response()) -> term().
+get_json(Response) ->
+  jsx:decode(get_body(Response)).
+
+-spec get_value_from_json(string(), term()) -> term().
+get_value_from_json(Key, Response) ->
+  JSON = get_json(Response),
+  get_value_by_json_path(JSON, Key).
 
 
 %%

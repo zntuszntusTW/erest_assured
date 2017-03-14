@@ -36,6 +36,7 @@ erest_assured_test_() ->
     fun requester_tests/1,
     fun giver_tests/1,
     fun tester_tests/1,
+    fun getter_testes/1,
     fun erest_assured_tests/1
   ]}.
 
@@ -248,6 +249,29 @@ tester_tests(_) ->
       {describe, "generate json has_key nested key tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:has_key("key.nested"))] ))(?Describe, ResponseJSONNested) )},
       {should_be, {ok, ResponseJSONNested}}
+    ]}
+  ]).
+
+getter_testes(_) ->
+  Response0 = erest_response:new(),
+  Response  = erest_response:body(?Body, Response0),
+  ResponseJSON  = erest_response:body(?JSONBody, Response0),
+
+  etest:tests([
+    {?LINE, [
+      {describe, "get_body getter"},
+      {run, ?_f( erest_assured:get_body(Response) )},
+      {should_be, ?Body}
+    ]},
+    {?LINE, [
+      {describe, "get_json getter"},
+      {run, ?_f( erest_assured:get_json(ResponseJSON) )},
+      {should_be, [{<<"key">>, <<"abcd">>}]}
+    ]},
+    {?LINE, [
+      {describe, "get_value_from_json getter"},
+      {run, ?_f( erest_assured:get_value_from_json("key", ResponseJSON) )},
+      {should_be, <<"abcd">>}
     ]}
   ]).
 
