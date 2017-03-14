@@ -48,7 +48,7 @@
 %% export testers
 -export([
   equal_to/1, equal_to/2, is_json/0,
-  should_be_string/1, should_be_integer/1, should_be_float/1, should_be_number/1,
+  should_be_string/1, should_be_integer/1, should_be_float/1, should_be_number/1, should_be_list/1,
   has_key/1
 ]).
 
@@ -183,13 +183,7 @@ equal_to(Expected) ->
 -spec is_json() -> tester().
 is_json() ->
   fun(Describe, Value) ->
-    Result =
-      try jsx:decode(Value) of
-        _ -> true
-      catch
-        error:badarg -> false
-      end,
-    assert_it(Describe, "should be JSON", Value, Result)
+    assert_it(Describe, "should be JSON", Value, jsx:is_json(Value))
   end.
 
 -spec equal_to(string(), term()) -> tester().
@@ -225,6 +219,13 @@ should_be_number(Key) ->
   fun(Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
     assert_it(Describe, Key ++ " should be number", Value, is_integer(Value) orelse is_float(Value))
+  end.
+
+-spec should_be_list(string()) -> tester().
+should_be_list(Key) ->
+  fun(Describe, JSON) ->
+    Value = get_value_by_json_path(JSON, Key),
+    assert_it(Describe, Key ++ " should be number", Value, is_list(Value))
   end.
 
 -spec has_key(string()) -> tester().
@@ -293,11 +294,4 @@ print_assert({fail, {Describe,  Msg, Expected, Value}} = Assert) ->
   io:format("  - Value: ~p~n", [Value]),
   Assert.
 
-get_value_by_json_path(JSON, Path) ->
-  Paths = string:tokens(Path, "."),
-  get_value_by_json_path(loop, JSON, Paths).
-get_value_by_json_path(loop, undefine, _) -> undefined;
-get_value_by_json_path(loop, Value, []) -> Value;
-get_value_by_json_path(loop, JSON, [Key | T]) ->
-  NextJSON = proplists:get_value(list_to_binary(Key), JSON, undefined),
-  get_value_by_json_path(loop, NextJSON, T).
+get_value_by_json_path(JSON, Path) -> json_path:search(Path, JSON).

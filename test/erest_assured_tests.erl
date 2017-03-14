@@ -26,6 +26,7 @@
 -define(WrongBody, <<"my wrong erest_assured body">>).
 -define(Describe, <<"my erest_assured describe">>).
 
+
 %%==============================================================================
 %% Test generator functions
 %%==============================================================================
