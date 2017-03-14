@@ -42,7 +42,7 @@
 
 %% export asserts
 -export([
-  body/1, json/1
+  body/1, json/1, status_code/1
 ]).
 
 %% export testers
@@ -164,6 +164,13 @@ body(Tester) ->
 json(Tester) ->
   fun(Describe, Response) ->
     Tester(Describe, jsx:decode(erest_response:body(Response)))
+  end.
+
+-spec status_code(integer()) -> assert().
+status_code(Code) ->
+  fun(Describe, Response) ->
+    StatusCode = erest_response:status_code(Response),
+    assert_it(Describe, "http status code should be " ++ integer_to_list(Code), StatusCode, StatusCode =:= Code)
   end.
 
 %%

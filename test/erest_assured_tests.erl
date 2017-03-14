@@ -154,13 +154,24 @@ giver_tests(_) ->
 
 tester_tests(_) ->
   Response0 = erest_response:new(),
-  Response  = erest_response:body(?Body, Response0),
+  Response1 = erest_response:status_code(200, Response0),
+  Response  = erest_response:body(?Body, Response1),
   ResponseJSON  = erest_response:body(?JSONBody, Response0),
   ResponseJSONInteger  = erest_response:body(?JSONInteger, Response0),
   ResponseJSONFloat  = erest_response:body(?JSONFloat, Response0),
   ResponseJSONNested  = erest_response:body(?JSONNested, Response0),
 
   etest:tests([
+    {?LINE, [
+      {describe, "status code right tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:status_code(200)] ))(?Describe, Response) )},
+      {should_be, {ok, Response} }
+    ]},
+    {?LINE, [
+      {describe, "status code wrong tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:status_code(500)] ))(?Describe, Response) )},
+      {should_be, {fail, {?Describe, "http status code should be 500", 200}} }
+    ]},
     {?LINE, [
       {describe, "generate body equal_to right tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:body(erest_assured:equal_to(?Body))] ))(?Describe, Response) )},
