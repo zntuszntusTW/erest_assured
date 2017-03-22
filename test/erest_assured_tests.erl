@@ -163,14 +163,34 @@ tester_tests(_) ->
 
   etest:tests([
     {?LINE, [
-      {describe, "status code right tester"},
-      {run, ?_f( (erest_assured:then( [erest_assured:status_code(200)] ))(?Describe, Response) )},
+      {describe, "generate status code equal_to right tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:equal_to(200))] ))(?Describe, Response) )},
       {should_be, {ok, Response} }
     ]},
     {?LINE, [
-      {describe, "status code wrong tester"},
-      {run, ?_f( (erest_assured:then( [erest_assured:status_code(500)] ))(?Describe, Response) )},
-      {should_be, {fail, {?Describe, "http status code should be 500", 200}} }
+      {describe, "generate status code equal_to wrong tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:equal_to(500))] ))(?Describe, Response) )},
+      {should_be, {fail, {?Describe, "should be equal with expected value", 500, 200}} }
+    ]},
+    {?LINE, [
+      {describe, "generate status code greater than right tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:greater_than(199))] ))(?Describe, Response) )},
+      {should_be, {ok, Response} }
+    ]},
+    {?LINE, [
+      {describe, "generate status code greater than wrong tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:greater_than(200))] ))(?Describe, Response) )},
+      {should_be, {fail, {?Describe, "should be greater than expected value", 200, 200}} }
+    ]},
+    {?LINE, [
+      {describe, "generate status code less than right tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:less_than(201))] ))(?Describe, Response) )},
+      {should_be, {ok, Response} }
+    ]},
+    {?LINE, [
+      {describe, "generate status code less than wrong tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:less_than(200))] ))(?Describe, Response) )},
+      {should_be, {fail, {?Describe, "should be less than expected value", 200, 200}} }
     ]},
     {?LINE, [
       {describe, "generate body equal_to right tester"},
@@ -201,6 +221,26 @@ tester_tests(_) ->
       {describe, "generate json equal_to wrong tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:equal_to("key", <<"my_value">>))] ))(?Describe, ResponseJSON) )},
       {should_be, {fail, {?Describe, "key should be equal with expected value", <<"my_value">>, <<"abcd">>}}}
+    ]},
+    {?LINE, [
+      {describe, "generate json greater_than right tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:greater_than("key", 122))] ))(?Describe, ResponseJSONInteger) )},
+      {should_be, {ok, ResponseJSONInteger}}
+    ]},
+    {?LINE, [
+      {describe, "generate json greater_than wrong tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:greater_than("key", 123))] ))(?Describe, ResponseJSONInteger) )},
+      {should_be, {fail, {?Describe, "key should be greater than expected value", 123, 123}}}
+    ]},
+    {?LINE, [
+      {describe, "generate json less_than right tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:less_than("key", 124))] ))(?Describe, ResponseJSONInteger) )},
+      {should_be, {ok, ResponseJSONInteger}}
+    ]},
+    {?LINE, [
+      {describe, "generate json less_than wrong tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:less_than("key", 123))] ))(?Describe, ResponseJSONInteger) )},
+      {should_be, {fail, {?Describe, "key should be less than expected value", 123, 123}}}
     ]},
     {?LINE, [
       {describe, "generate json should_be_string right tester"},

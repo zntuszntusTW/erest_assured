@@ -47,7 +47,8 @@
 
 %% export testers
 -export([
-  equal_to/1, equal_to/2, is_json/0,
+  equal_to/1, equal_to/2, greater_than/1, greater_than/2, less_than/1, less_than/2,
+  is_json/0,
   should_be_string/1, should_be_integer/1, should_be_float/1, should_be_number/1, should_be_list/1,
   has_key/1
 ]).
@@ -163,19 +164,44 @@ body(Tester) ->
 -spec json(tester()) -> assert().
 json(Tester) ->
   fun(Describe, Response) ->
-    Tester(Describe, jsx:decode(erest_response:body(Response)))
+    Tester(json, Describe, jsx:decode(erest_response:body(Response)))
   end.
 
 -spec status_code(integer()) -> assert().
-status_code(Code) ->
+status_code(Tester) ->
   fun(Describe, Response) ->
-    StatusCode = erest_response:status_code(Response),
-    assert_it(Describe, "http status code should be " ++ integer_to_list(Code), StatusCode, StatusCode =:= Code)
+    Tester(Describe, erest_response:status_code(Response))
   end.
 
 %%
-%% testers for body
+%% testers
 %%
+
+-spec greater_than(number()) -> tester().
+greater_than(Expected) ->
+  fun(Describe, Value) ->
+    assert_it(Describe, "should be greater than expected value", Expected, Value, Expected < Value)
+  end.
+
+-spec greater_than(string(), number()) -> tester().
+greater_than(Key, Expected) ->
+  fun(json, Describe, JSON) ->
+    Value = get_value_by_json_path(JSON, Key),
+    assert_it(Describe, Key ++ " should be greater than expected value", Expected, Value, Expected < Value)
+  end.
+
+-spec less_than(number()) -> tester().
+less_than(Expected) ->
+  fun(Describe, Value) ->
+    assert_it(Describe, "should be less than expected value", Expected, Value, Expected > Value)
+  end.
+
+-spec less_than(string(), number()) -> tester().
+less_than(Key, Expected) ->
+  fun(json, Describe, JSON) ->
+    Value = get_value_by_json_path(JSON, Key),
+    assert_it(Describe, Key ++ " should be less than expected value", Expected, Value, Expected > Value)
+  end.
 
 -spec equal_to(term()) -> tester().
 equal_to(Expected) ->
@@ -183,9 +209,12 @@ equal_to(Expected) ->
     assert_it(Describe, "should be equal with expected value", Expected, Value, Expected =:= Value)
   end.
 
-%%
-%% testers for json
-%%
+-spec equal_to(string(), term()) -> tester().
+equal_to(Key, Expected) ->
+  fun(json, Describe, JSON) ->
+    Value = get_value_by_json_path(JSON, Key),
+    assert_it(Describe, Key ++ " should be equal with expected value", Expected, Value, Expected =:= Value)
+  end.
 
 -spec is_json() -> tester().
 is_json() ->
@@ -193,51 +222,44 @@ is_json() ->
     assert_it(Describe, "should be JSON", Value, jsx:is_json(Value))
   end.
 
--spec equal_to(string(), term()) -> tester().
-equal_to(Key, Expected) ->
-  fun(Describe, JSON) ->
-    Value = get_value_by_json_path(JSON, Key),
-    assert_it(Describe, Key ++ " should be equal with expected value", Expected, Value, Expected =:= Value)
-  end.
-
 -spec should_be_string(string()) -> tester().
 should_be_string(Key) ->
-  fun(Describe, JSON) ->
+  fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
     assert_it(Describe, Key ++ " should be string", Value, is_bitstring(Value))
   end.
 
 -spec should_be_integer(string()) -> tester().
 should_be_integer(Key) ->
-  fun(Describe, JSON) ->
+  fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
     assert_it(Describe, Key ++ " should be integer", Value, is_integer(Value))
   end.
 
 -spec should_be_float(string()) -> tester().
 should_be_float(Key) ->
-  fun(Describe, JSON) ->
+  fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
     assert_it(Describe, Key ++ " should be float", Value, is_float(Value))
   end.
 
 -spec should_be_number(string()) -> tester().
 should_be_number(Key) ->
-  fun(Describe, JSON) ->
+  fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
     assert_it(Describe, Key ++ " should be number", Value, is_integer(Value) orelse is_float(Value))
   end.
 
 -spec should_be_list(string()) -> tester().
 should_be_list(Key) ->
-  fun(Describe, JSON) ->
+  fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
     assert_it(Describe, Key ++ " should be number", Value, is_list(Value))
   end.
 
 -spec has_key(string()) -> tester().
 has_key(Key) ->
-  fun(Describe, JSON) ->
+  fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
     assert_it(Describe, Key ++ " should be exist", Value =/= undefined)
   end.
