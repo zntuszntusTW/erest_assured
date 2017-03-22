@@ -158,7 +158,7 @@ patch(Path) -> gen_execute_request(patch, Path).
 -spec body(tester()) -> assert().
 body(Tester) ->
   fun(Describe, Response) ->
-    Tester(Describe, erest_response:body(Response))
+    Tester("body", Describe, erest_response:body(Response))
   end.
 
 -spec json(tester()) -> assert().
@@ -170,7 +170,7 @@ json(Tester) ->
 -spec status_code(integer()) -> assert().
 status_code(Tester) ->
   fun(Describe, Response) ->
-    Tester(Describe, erest_response:status_code(Response))
+    Tester("status code", Describe, erest_response:status_code(Response))
   end.
 
 %%
@@ -179,8 +179,8 @@ status_code(Tester) ->
 
 -spec greater_than(number()) -> tester().
 greater_than(Expected) ->
-  fun(Describe, Value) ->
-    assert_it(Describe, "should be greater than expected value", Expected, Value, Expected < Value)
+  fun(What, Describe, Value) ->
+    assert_it(Describe, What ++ " should be greater than expected value", Expected, Value, Expected < Value)
   end.
 
 -spec greater_than(string(), number()) -> tester().
@@ -192,8 +192,8 @@ greater_than(Key, Expected) ->
 
 -spec less_than(number()) -> tester().
 less_than(Expected) ->
-  fun(Describe, Value) ->
-    assert_it(Describe, "should be less than expected value", Expected, Value, Expected > Value)
+  fun(What, Describe, Value) ->
+    assert_it(Describe, What ++ " should be less than expected value", Expected, Value, Expected > Value)
   end.
 
 -spec less_than(string(), number()) -> tester().
@@ -205,8 +205,8 @@ less_than(Key, Expected) ->
 
 -spec equal_to(term()) -> tester().
 equal_to(Expected) ->
-  fun(Describe, Value) ->
-    assert_it(Describe, "should be equal with expected value", Expected, Value, Expected =:= Value)
+  fun(What, Describe, Value) ->
+    assert_it(Describe, What ++ " should be equal with expected value", Expected, Value, Expected =:= Value)
   end.
 
 -spec equal_to(string(), term()) -> tester().
@@ -218,8 +218,8 @@ equal_to(Key, Expected) ->
 
 -spec is_json() -> tester().
 is_json() ->
-  fun(Describe, Value) ->
-    assert_it(Describe, "should be JSON", Value, jsx:is_json(Value))
+  fun(What, Describe, Value) ->
+    assert_it(Describe, What ++ " should be JSON", Value, jsx:is_json(Value))
   end.
 
 -spec should_be_string(string()) -> tester().

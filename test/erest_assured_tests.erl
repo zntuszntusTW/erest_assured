@@ -170,7 +170,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate status code equal_to wrong tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:equal_to(500))] ))(?Describe, Response) )},
-      {should_be, {fail, {?Describe, "should be equal with expected value", 500, 200}} }
+      {should_be, {fail, {?Describe, "status code should be equal with expected value", 500, 200}} }
     ]},
     {?LINE, [
       {describe, "generate status code greater than right tester"},
@@ -180,7 +180,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate status code greater than wrong tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:greater_than(200))] ))(?Describe, Response) )},
-      {should_be, {fail, {?Describe, "should be greater than expected value", 200, 200}} }
+      {should_be, {fail, {?Describe, "status code should be greater than expected value", 200, 200}} }
     ]},
     {?LINE, [
       {describe, "generate status code less than right tester"},
@@ -190,7 +190,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate status code less than wrong tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:less_than(200))] ))(?Describe, Response) )},
-      {should_be, {fail, {?Describe, "should be less than expected value", 200, 200}} }
+      {should_be, {fail, {?Describe, "status code should be less than expected value", 200, 200}} }
     ]},
     {?LINE, [
       {describe, "generate body equal_to right tester"},
@@ -200,7 +200,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate body equal_to wrong tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:body(erest_assured:equal_to(?WrongBody))] ))(?Describe, Response) )},
-      {should_be, {fail, {?Describe, "should be equal with expected value", ?WrongBody, ?Body}}}
+      {should_be, {fail, {?Describe, "body should be equal with expected value", ?WrongBody, ?Body}}}
     ]},
     {?LINE, [
       {describe, "generate is_json tester"},
@@ -210,7 +210,7 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate is_json wrong tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:body(erest_assured:is_json())] ))(?Describe, Response) )},
-      {should_be, {fail, {?Describe, "should be JSON", ?Body}}}
+      {should_be, {fail, {?Describe, "body should be JSON", ?Body}}}
     ]},
     {?LINE, [
       {describe, "generate json equal_to right tester"},
