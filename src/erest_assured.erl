@@ -105,10 +105,8 @@ then(Asserts) when is_list(Asserts) ->
         Asserts
       ),
     print_assert(Result),
-    case Result of
-      {ok, _} -> {ok, Response};
-      _ -> Result
-    end
+    {IsOK, Asserted} = Result,
+    {IsOK, Asserted, Response}
   end.
 
 %%
