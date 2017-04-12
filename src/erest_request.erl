@@ -150,10 +150,10 @@ execute(Request) ->
 to_proplist(Request) ->
   [ {method, method(Request)},
     {host, host(Request)},
-    {path, path(Request)},
+    {path, path_to_string(Request)},
     {protocol, protocol(Request)},
-    {query_string, query_string(Request)},
-    {parameters, parameters(Request)},
+    {query_string, qs_to_string(Request)},
+    {parameters,parameters_to_binary(Request)},
     {headers, headers(Request)},
     {port, port(Request)},
     {body, body(Request)},
