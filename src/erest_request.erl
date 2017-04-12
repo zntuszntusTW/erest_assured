@@ -152,7 +152,7 @@ to_proplist(Request) ->
     {host, host(Request)},
     {path, path_to_string(Request)},
     {protocol, protocol(Request)},
-    {query_string, qs_to_string(Request)},
+    {query_string, qs_to_string(query_string(Request))},
     {parameters,parameters_to_binary(Request)},
     {headers, headers(Request)},
     {port, port(Request)},
