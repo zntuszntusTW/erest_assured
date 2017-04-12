@@ -56,5 +56,6 @@ to_proplist(Response) ->
 
 headers_to_proplist(Response) when is_record(Response, response) ->
   headers_to_proplist( headers(Response) );
+headers_to_proplist([]) -> [];
 headers_to_proplist([{HeaderName, HeaderContent} | T]) when is_list(HeaderName) ->
   [{list_to_binary(HeaderName), HeaderContent}] ++ headers_to_proplist(T).
