@@ -58,6 +58,10 @@
   get_body/1, get_json/1, get_value_from_json/2
 ]).
 
+-export([
+  result_to_list/1, result_to_maps/1
+]).
+
 start() ->
   application:load(?APP),
   {ok, Apps} = application:get_key(?APP, applications),
@@ -320,5 +324,36 @@ print_assert({fail, {Describe,  Msg, Expected, Value}} = Assert) ->
   io:format("  - Expected: ~p~n", [Expected]),
   io:format("  - Value: ~p~n", [Value]),
   Assert.
+
+result_to_list({Result, {Describe, Msg}}) ->
+  [ {result, Result},
+    {describe, Describe},
+    {message, Msg} ];
+result_to_list({Result, {Describe, Msg, Value}}) ->
+  [ {result, Result},
+    {describe, Describe},
+    {message, Msg},
+    {value, Value} ];
+result_to_list({Result, {Describe, Msg, Expected, Value}}) ->
+  [ {result, Result},
+    {describe, Describe},
+    {message, Msg},
+    {expected, Expected},
+    {value, Value} ].
+result_to_maps({Result, {Describe, Msg}}) ->
+  #{ result => Result,
+     describe => Describe,
+     message => Msg };
+result_to_maps({Result, {Describe, Msg, Value}}) ->
+  #{ result => Result,
+    describe => Describe,
+    message => Msg,
+    value => Value };
+result_to_maps({Result, {Describe, Msg, Expected, Value}}) ->
+  #{ result => Result,
+     describe => Describe,
+     message => Msg,
+     expected => Expected,
+     value => Value }.
 
 get_value_by_json_path(JSON, Path) -> json_path:search(Path, JSON).
