@@ -27,7 +27,8 @@
   headers/1, headers/2, add_header/2,
   port/1, port/2,
   body/1, body/2,
-  timeout/1, timeout/2
+  timeout/1, timeout/2,
+  to_proplist/1
 ]).
 
 -spec new() -> request().
@@ -144,6 +145,19 @@ execute(Request) ->
     _ ->
       {error, Result}
   end.
+
+-spec to_proplist(request()) -> list().
+to_proplist(Request) ->
+  [ {method, method(Request)},
+    {host, host(Request)},
+    {path, path(Request)},
+    {protocol, protocol(Request)},
+    {query_string, query_string(Request)},
+    {parameters, parameters(Request)},
+    {headers, headers(Request)},
+    {port, port(Request)},
+    {body, body(Request)},
+    {timeout, timeout(Request)} ].
 
 %%
 %% internal function

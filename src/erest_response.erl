@@ -27,7 +27,8 @@
 -export([
   status_code/1, status_code/2,
   headers/1, headers/2,
-  body/1, body/2]).
+  body/1, body/2,
+  to_proplist/1]).
 
 -spec new() -> response().
 new() -> #response{}.
@@ -46,3 +47,9 @@ headers(Headers, Response) -> Response#response{headers = Headers}.
 body(Response) -> Response#response.body.
 -spec body(bitstring(), response()) -> response().
 body(Body, Response) -> Response#response{body = Body}.
+
+-spec to_proplist(response()) -> list().
+to_proplist(Response) ->
+  [ {<<"status_code">>, status_code(Response)},
+    {<<"headers">>, headers(Response)},
+    {<<"body">>, body(Response)} ].
