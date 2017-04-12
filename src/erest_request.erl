@@ -154,7 +154,7 @@ to_proplist(Request) ->
     {protocol, protocol(Request)},
     {query_string, qs_to_string(query_string(Request))},
     {parameters,parameters_to_binary(Request)},
-    {headers, headers(Request)},
+    {headers, headers_to_string(headers(Request))},
     {port, port(Request)},
     {body, body(Request)},
     {timeout, timeout(Request)} ].
