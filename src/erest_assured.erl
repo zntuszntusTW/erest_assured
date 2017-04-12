@@ -59,7 +59,7 @@
 ]).
 
 -export([
-  result_to_list/1, result_to_maps/1
+  message_to_list/1, message_to_maps/1
 ]).
 
 start() ->
@@ -325,33 +325,27 @@ print_assert({fail, {Describe,  Msg, Expected, Value}} = Assert) ->
   io:format("  - Value: ~p~n", [Value]),
   Assert.
 
-result_to_list({Result, {Describe, Msg}}) ->
-  [ {result, Result},
-    {describe, Describe},
+message_to_list({Describe, Msg}) ->
+  [ {describe, Describe},
     {message, Msg} ];
-result_to_list({Result, {Describe, Msg, Value}}) ->
-  [ {result, Result},
-    {describe, Describe},
+message_to_list({Describe, Msg, Value}) ->
+  [ {describe, Describe},
     {message, Msg},
     {value, Value} ];
-result_to_list({Result, {Describe, Msg, Expected, Value}}) ->
-  [ {result, Result},
-    {describe, Describe},
+message_to_list({Describe, Msg, Expected, Value}) ->
+  [ {describe, Describe},
     {message, Msg},
     {expected, Expected},
     {value, Value} ].
-result_to_maps({Result, {Describe, Msg}}) ->
-  #{ result => Result,
-     describe => Describe,
+message_to_maps({Describe, Msg}) ->
+  #{ describe => Describe,
      message => Msg };
-result_to_maps({Result, {Describe, Msg, Value}}) ->
-  #{ result => Result,
-    describe => Describe,
-    message => Msg,
-    value => Value };
-result_to_maps({Result, {Describe, Msg, Expected, Value}}) ->
-  #{ result => Result,
-     describe => Describe,
+message_to_maps({Describe, Msg, Value}) ->
+  #{ describe => Describe,
+     message => Msg,
+     value => Value };
+message_to_maps({Describe, Msg, Expected, Value}) ->
+  #{ describe => Describe,
      message => Msg,
      expected => Expected,
      value => Value }.
