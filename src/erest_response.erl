@@ -50,9 +50,9 @@ body(Body, Response) -> Response#response{body = Body}.
 
 -spec to_proplist(response()) -> list().
 to_proplist(Response) ->
-  [ {<<"status_code">>, status_code(Response)},
-    {<<"headers">>, headers_to_proplist(Response)},
-    {<<"body">>, body(Response)} ].
+  [ {status_code, status_code(Response)},
+    {headers, headers_to_proplist(Response)},
+    {body, body(Response)} ].
 
 headers_to_proplist(Response) when is_record(Response, response) ->
   headers_to_proplist( headers(Response) );
