@@ -63,9 +63,14 @@ is_json(Response) ->
 
 -spec to_proplist(response()) -> list().
 to_proplist(Response) ->
+  Body =
+    case is_json(Response) of
+      true -> body_as_json(Response);
+      false -> body(Response)
+    end,
   [ {status_code, status_code(Response)},
     {headers, headers_to_proplist(Response)},
-    {body, body(Response)} ].
+    {body, Body} ].
 
 headers_to_proplist(Response) when is_record(Response, response) ->
   headers_to_proplist( headers(Response) );
