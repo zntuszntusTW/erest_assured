@@ -27,7 +27,8 @@
 -export([
   status_code/1, status_code/2,
   headers/1, headers/2,
-  body/1, body/2,
+  body/1, body/2, body_as_json/1,
+  is_json/1,
   to_proplist/1]).
 
 -spec new() -> response().
@@ -47,6 +48,18 @@ headers(Headers, Response) -> Response#response{headers = Headers}.
 body(Response) -> Response#response.body.
 -spec body(bitstring(), response()) -> response().
 body(Body, Response) -> Response#response{body = Body}.
+
+-spec body_as_json(response()) -> list().
+body_as_json(Response) ->
+  jsx:decode(Response).
+
+-spec is_json(response()) -> boolean().
+is_json(Response) ->
+  try jsx:decode(Response) of
+    _ -> true
+  catch
+    _:badarg -> false
+  end.
 
 -spec to_proplist(response()) -> list().
 to_proplist(Response) ->
