@@ -51,11 +51,11 @@ body(Body, Response) -> Response#response{body = Body}.
 
 -spec body_as_json(response()) -> list().
 body_as_json(Response) ->
-  jsx:decode(Response).
+  jsx:decode(body(Response)).
 
 -spec is_json(response()) -> boolean().
 is_json(Response) ->
-  try jsx:decode(Response) of
+  try jsx:decode(body(Response)) of
     _ -> true
   catch
     _:badarg -> false
