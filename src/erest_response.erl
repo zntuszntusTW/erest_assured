@@ -14,6 +14,7 @@
 -type headers() :: list(header()).
 
 -record(response, {
+  time_duration :: integer(), %% milliseconds
   status_code :: status_code(),
   headers :: headers(),
   body :: bitstring()
@@ -25,6 +26,7 @@
 -export([new/0]).
 
 -export([
+  time_duration/1, time_duration/2,
   status_code/1, status_code/2,
   headers/1, headers/2,
   body/1, body/2, body_as_json/1,
@@ -33,6 +35,11 @@
 
 -spec new() -> response().
 new() -> #response{}.
+
+-spec time_duration(response()) -> integer().
+time_duration(Response) -> Response#response.time_duration.
+-spec time_duration(status_code(), response()) -> response().
+time_duration(TimeDuration, Response) -> Response#response{time_duration = TimeDuration}.
 
 -spec status_code(response()) -> status_code().
 status_code(Response) -> Response#response.status_code.

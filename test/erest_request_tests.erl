@@ -133,8 +133,9 @@ execute_output_tests(_) ->
   Response0 = erest_response:new(),
   Response1 = erest_response:headers([], Response0),
   Response2 = erest_response:body(?BODY, Response1),
-  Response200 = erest_response:status_code(200, Response2),
-  Response404 = erest_response:status_code(404, Response2),
+  Response3 = erest_response:time_duration(0, Response2),
+  Response200 = erest_response:status_code(200, Response3),
+  Response404 = erest_response:status_code(404, Response3),
 
   etest:tests([
     {?LINE, [

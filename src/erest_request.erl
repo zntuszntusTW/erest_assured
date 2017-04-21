@@ -126,6 +126,7 @@ isSSL(_Request) -> false.
 -spec execute(request()) -> {ok, response()} | {error, reason()}.
 execute(Request) ->
   Response0 = erest_response:new(),
+  TimeBeforeRequest = get_timestamp(),
   Result = lhttpc:request(
     host(Request),
     port(Request),
@@ -135,12 +136,14 @@ execute(Request) ->
     headers_to_string(headers(Request)),
     parameters_to_binary(Request),
     timeout(Request), []),
+  TimeAfterRequest = get_timestamp(),
 
   case Result of
     {ok, {{StatusCode, _Status}, Headers, Body}} ->
       Response1 = erest_response:status_code(StatusCode, Response0),
       Response2 = erest_response:headers(Headers, Response1),
-      Response  = erest_response:body(Body, Response2),
+      Response3 = erest_response:time_duration(TimeAfterRequest - TimeBeforeRequest, Response2),
+      Response  = erest_response:body(Body, Response3),
       Response;
     _ ->
       {error, Result}
@@ -215,3 +218,7 @@ build_parameters([{K, _V}=Query | T]) when is_atom(K) ->
 build_parameters({K, V}) when is_atom(K) ->
   Key = atom_to_binary(K,utf8),
   <<Key/binary, "=", V/binary>>.
+
+get_timestamp() ->
+  {Mega, Sec, Micro} = os:timestamp(),
+  (Mega*1000000 + Sec)*1000 + round(Micro/1000).
