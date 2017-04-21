@@ -77,6 +77,7 @@ to_proplist(Response) ->
     end,
   [ {status_code, status_code(Response)},
     {headers, headers_to_proplist(Response)},
+    {time_duration, time_duration(Response)},
     {body, Body} ].
 
 headers_to_proplist(Response) when is_record(Response, response) ->
