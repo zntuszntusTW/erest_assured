@@ -16,6 +16,7 @@ search(Path, JSON) ->
   ParsedPath = parse_path(Path),
   search_path(ParsedPath, JSON).
 
+search_path(_, undefined) -> undefined;
 search_path([], Value) -> Value;
 search_path([{key, Key} | T], JSON) ->
   search_path(T, search_tuple(Key, JSON));
@@ -31,6 +32,7 @@ search_list(Index, JsonList) when is_integer(Index) ->
   catch
     _:function_clause -> undefined
   end.
+search_tuple(_Key, undefined) -> undefined;
 search_tuple(Key, JsonTuple) ->
   proplists:get_value(Key, JsonTuple, undefined).
 
