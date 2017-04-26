@@ -27,7 +27,10 @@ search_path([{index, Idx1, Idx2} | T], JSON) ->
 search_list(Index1, Index2, JsonList) when is_integer(Index1) andalso is_integer(Index2) ->
   lists:sublist(JsonList, Index1+1, Index2-Index1+1).
 search_list(Index, JsonList) when is_integer(Index) ->
-  lists:nth(Index+1, JsonList).
+  try lists:nth(Index+1, JsonList)
+  catch
+    _:function_clause -> undefined
+  end.
 search_tuple(Key, JsonTuple) ->
   proplists:get_value(Key, JsonTuple, undefined).
 
