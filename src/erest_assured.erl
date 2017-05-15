@@ -182,60 +182,60 @@ status_code(Tester) ->
 -spec greater_than(number()) -> tester().
 greater_than(Expected) ->
   fun(What, Describe, Value) ->
-    assert_it(Describe, What ++ " should be greater than expected value", Expected, Value, Expected < Value)
+    assert_it(Describe, string_combine([What, " should be greater than expected value"]), Expected, Value, Expected < Value)
   end.
 
 -spec greater_than(string(), number()) -> tester().
 greater_than(Key, Expected) ->
   fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
-    assert_it(Describe, Key ++ " should be greater than expected value", Expected, Value, Expected < Value)
+    assert_it(Describe, string_combine([Key, " should be greater than expected value"]), Expected, Value, Expected < Value)
   end.
 
 -spec less_than(number()) -> tester().
 less_than(Expected) ->
   fun(What, Describe, Value) ->
-    assert_it(Describe, What ++ " should be less than expected value", Expected, Value, Expected > Value)
+    assert_it(Describe, string_combine([What, " should be less than expected value"]), Expected, Value, Expected > Value)
   end.
 
 -spec less_than(string(), number()) -> tester().
 less_than(Key, Expected) ->
   fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
-    assert_it(Describe, Key ++ " should be less than expected value", Expected, Value, Expected > Value)
+    assert_it(Describe, string_combine([Key, " should be less than expected value"]), Expected, Value, Expected > Value)
   end.
 
 -spec equal_to(term()) -> tester().
 equal_to(Expected) ->
   fun(What, Describe, Value) ->
-    assert_it(Describe, What ++ " should be equal with expected value", Expected, Value, Expected =:= Value)
+    assert_it(Describe, string_combine([What, " should be equal with expected value"]), Expected, Value, Expected =:= Value)
   end.
 
 -spec equal_to(string(), term()) -> tester().
 equal_to(Key, Expected) ->
   fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
-    assert_it(Describe, Key ++ " should be equal with expected value", Expected, Value, Expected =:= Value)
+    assert_it(Describe, string_combine([Key, " should be equal with expected value"]), Expected, Value, Expected =:= Value)
   end.
 
 -spec is_json() -> tester().
 is_json() ->
   fun(What, Describe, Value) ->
-    assert_it(Describe, What ++ " should be JSON", Value, jsx:is_json(Value))
+    assert_it(Describe, string_combine([What, " should be JSON"]), Value, jsx:is_json(Value))
   end.
 
 -spec should_be_string(string()) -> tester().
 should_be_string(Key) ->
   fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
-    assert_it(Describe, Key ++ " should be string", Value, is_bitstring(Value))
+    assert_it(Describe, string_combine([Key, " should be string"]), Value, is_bitstring(Value))
   end.
 
 -spec should_be_integer(string()) -> tester().
 should_be_integer(Key) ->
   fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
-    assert_it(Describe, Key ++ " should be integer", Value, is_integer(Value))
+    assert_it(Describe, string_combine([Key, " should be integer"]), Value, is_integer(Value))
   end.
 
 -spec should_be_float(string()) -> tester().
@@ -249,21 +249,21 @@ should_be_float(Key) ->
 should_be_number(Key) ->
   fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
-    assert_it(Describe, Key ++ " should be number", Value, is_integer(Value) orelse is_float(Value))
+    assert_it(Describe, string_combine([Key, " should be number"]), Value, is_integer(Value) orelse is_float(Value))
   end.
 
 -spec should_be_list(string()) -> tester().
 should_be_list(Key) ->
   fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
-    assert_it(Describe, Key ++ " should be number", Value, is_list(Value))
+    assert_it(Describe, string_combine([Key, " should be number"]), Value, is_list(Value))
   end.
 
 -spec has_key(string()) -> tester().
 has_key(Key) ->
   fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
-    assert_it(Describe, Key ++ " should be exist", Value =/= undefined)
+    assert_it(Describe, string_combine([Key, " should be exist"]), Value =/= undefined)
   end.
 
 %%
@@ -351,3 +351,9 @@ message_to_maps({Describe, Msg, Expected, Value}) ->
      value => Value }.
 
 get_value_by_json_path(JSON, Path) -> json_path:search(Path, JSON).
+
+string_combine([]) -> [];
+string_combine([H|T]) when is_binary(H) ->
+  string_combine([binary_to_list(H)|T]);
+string_combine([H|T]) ->
+  H ++ string_combine(T).
