@@ -58,11 +58,13 @@ protocol(Protocol, Request) -> Request#request{protocol = Protocol}.
 -spec host(request()) -> host().
 host(Request) -> Request#request.host.
 -spec host(host(), request()) -> request().
+host(Host, Request) when is_binary(Host) -> host(binary_to_list(Host), Request);
 host(Host, Request) -> Request#request{host = Host}.
 
 -spec path(request()) -> path().
 path(Request) -> Request#request.path.
 -spec path(path(), request()) -> request().
+path(Path, Request) when is_binary(Path) -> path(binary_to_list(Path), Request);
 path(Path, Request) -> Request#request{path = Path}.
 
 -spec query_string(request()) -> query_string().
