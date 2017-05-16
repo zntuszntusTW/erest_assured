@@ -48,7 +48,7 @@
 %% export testers
 -export([
   equal_to/1, equal_to/2, greater_than/1, greater_than/2, less_than/1, less_than/2,
-  is_json/0,
+  is_json/0, should_be_json/0,
   should_be_string/1, should_be_integer/1, should_be_float/1, should_be_number/1, should_be_list/1,
   has_key/1
 ]).
@@ -223,6 +223,9 @@ is_json() ->
   fun(What, Describe, Value) ->
     assert_it(Describe, string_combine([What, " should be JSON"]), Value, jsx:is_json(Value))
   end.
+
+-spec should_be_json() -> tester().
+should_be_json() -> is_json().
 
 -spec should_be_string(string()) -> tester().
 should_be_string(Key) ->
