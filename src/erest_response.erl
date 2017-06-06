@@ -23,7 +23,7 @@
 -type response() :: #response{}.
 
 %% API
--export([is_valid/1, new/0]).
+-export([is_valid/1, is_reachable/1, new/0, new_unreachable/0]).
 
 -export([
   time_duration/1, time_duration/2,
@@ -37,8 +37,20 @@
 is_valid(Response) ->
   is_record(Response, response).
 
+is_reachable(Response) ->
+  status_code(Response) =/= -1.
+
 -spec new() -> response().
 new() -> #response{}.
+
+-spec new_unreachable() -> response().
+new_unreachable() ->
+  Response0 = #response{},
+  Response1 = status_code(-1, Response0),
+  Response2 = time_duration(-1, Response1),
+  Response3 = headers(undefined, Response2),
+  Response = body(undefined, Response3),
+  Response.
 
 -spec time_duration(response()) -> integer().
 time_duration(Response) -> Response#response.time_duration.
@@ -73,11 +85,6 @@ is_json(Response) ->
   end.
 
 -spec to_proplist(response()) -> list().
-to_proplist({error, _}) ->
-  [ {status_code, -1},
-    {headers, undefined},
-    {time_duration, -1},
-    {body, undefined} ];
 to_proplist(Response) ->
   Body =
     case is_json(Response) of

@@ -100,7 +100,7 @@ request(Requester) -> Requester.
 then(Asserts) when is_list(Asserts) ->
   fun(Describe, Response) ->
     Result =
-      case erest_response:is_valid(Response) of
+      case erest_response:is_valid(Response) andalso erest_response:is_reachable(Response) of
         true ->
           lists:foldl(
             fun
