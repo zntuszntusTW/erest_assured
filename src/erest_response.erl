@@ -48,8 +48,8 @@ new_unreachable() ->
   Response0 = #response{},
   Response1 = status_code(-1, Response0),
   Response2 = time_duration(-1, Response1),
-  Response3 = headers(undefined, Response2),
-  Response = body(undefined, Response3),
+  Response3 = headers([], Response2),
+  Response = body(<<"">>, Response3),
   Response.
 
 -spec time_duration(response()) -> integer().
