@@ -42,7 +42,7 @@
 
 %% export asserts
 -export([
-  body/1, json/1, status_code/1
+  body/1, json/1, status_code/1, time/1
 ]).
 
 %% export testers
@@ -169,10 +169,16 @@ json(Tester) ->
     Tester(json, Describe, jsx:decode(erest_response:body(Response)))
   end.
 
--spec status_code(integer()) -> assert().
+-spec status_code(tester()) -> assert().
 status_code(Tester) ->
   fun(Describe, Response) ->
     Tester("status code", Describe, erest_response:status_code(Response))
+  end.
+
+-spec time(tester()) -> assert().
+time(Tester) ->
+  fun(Describe, Response) ->
+    Tester("time duration", Describe, erest_response:time_duration(Response))
   end.
 
 %%

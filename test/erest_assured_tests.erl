@@ -155,7 +155,8 @@ giver_tests(_) ->
 tester_tests(_) ->
   Response0 = erest_response:new(),
   Response1 = erest_response:status_code(200, Response0),
-  Response  = erest_response:body(?Body, Response1),
+  Response2 = erest_response:time_duration(2500, Response1),
+  Response  = erest_response:body(?Body, Response2),
   ResponseJSON  = erest_response:body(?JSONBody, Response0),
   ResponseJSONInteger  = erest_response:body(?JSONInteger, Response0),
   ResponseJSONFloat  = erest_response:body(?JSONFloat, Response0),
@@ -191,6 +192,16 @@ tester_tests(_) ->
       {describe, "generate status code less than wrong tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:less_than(200))] ))(?Describe, Response) )},
       {should_be, {fail, {?Describe, "status code should be less than expected value", 200, 200}, Response} }
+    ]},
+    {?LINE, [
+      {describe, "generate time duration less than 3000ms"},
+      {run, ?_f( (erest_assured:then( [erest_assured:time(erest_assured:less_than(3000))] ))(?Describe, Response) )},
+      {should_be, {ok, {?Describe, "time duration should be less than expected value", 3000, 2500}, Response} }
+    ]},
+    {?LINE, [
+      {describe, "generate time duration less than wrong number"},
+      {run, ?_f( (erest_assured:then( [erest_assured:time(erest_assured:less_than(2000))] ))(?Describe, Response) )},
+      {should_be, {fail, {?Describe, "time duration should be less than expected value", 2000, 2500}, Response} }
     ]},
     {?LINE, [
       {describe, "generate body equal_to right tester"},
