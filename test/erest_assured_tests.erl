@@ -165,12 +165,12 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate status code equal_to right tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:equal_to(200))] ))(?Describe, Response) )},
-      {should_be, {ok, {?Describe, "status code should be equal with expected value", 200, 200}, Response} }
+      {should_be, {ok, {?Describe, "status code should be equal to expected value", 200, 200}, Response} }
     ]},
     {?LINE, [
       {describe, "generate status code equal_to wrong tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:equal_to(500))] ))(?Describe, Response) )},
-      {should_be, {fail, {?Describe, "status code should be equal with expected value", 500, 200}, Response} }
+      {should_be, {fail, {?Describe, "status code should be equal to expected value", 500, 200}, Response} }
     ]},
     {?LINE, [
       {describe, "generate status code greater than right tester"},
@@ -195,12 +195,12 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate body equal_to right tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:body(erest_assured:equal_to(?Body))] ))(?Describe, Response) )},
-      {should_be, {ok, {?Describe, "body should be equal with expected value", ?Body, ?Body}, Response} }
+      {should_be, {ok, {?Describe, "body should be equal to expected value", ?Body, ?Body}, Response} }
     ]},
     {?LINE, [
       {describe, "generate body equal_to wrong tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:body(erest_assured:equal_to(?WrongBody))] ))(?Describe, Response) )},
-      {should_be, {fail, {?Describe, "body should be equal with expected value", ?WrongBody, ?Body}, Response}}
+      {should_be, {fail, {?Describe, "body should be equal to expected value", ?WrongBody, ?Body}, Response}}
     ]},
     {?LINE, [
       {describe, "generate is_json tester"},
@@ -215,12 +215,12 @@ tester_tests(_) ->
     {?LINE, [
       {describe, "generate json equal_to right tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:equal_to("key", <<"abcd">>))] ))(?Describe, ResponseJSON) )},
-      {should_be, {ok, {?Describe, "key should be equal with expected value", <<"abcd">>, <<"abcd">>}, ResponseJSON}}
+      {should_be, {ok, {?Describe, "key should be equal to expected value", <<"abcd">>, <<"abcd">>}, ResponseJSON}}
     ]},
     {?LINE, [
       {describe, "generate json equal_to wrong tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:equal_to("key", <<"my_value">>))] ))(?Describe, ResponseJSON) )},
-      {should_be, {fail, {?Describe, "key should be equal with expected value", <<"my_value">>, <<"abcd">>}, ResponseJSON}}
+      {should_be, {fail, {?Describe, "key should be equal to expected value", <<"my_value">>, <<"abcd">>}, ResponseJSON}}
     ]},
     {?LINE, [
       {describe, "generate json greater_than right tester"},
@@ -345,6 +345,6 @@ erest_assured_tests(_) ->
         { fun erest_request:execute/1,
           [ {parameter_should_be, [Request]},
             {with_return, Response }] }},
-      {should_be, {ok, {?Describe, "body should be equal with expected value", ?Body, ?Body}, Response}}
+      {should_be, {ok, {?Describe, "body should be equal to expected value", ?Body, ?Body}, Response}}
     ]}
   ]).
