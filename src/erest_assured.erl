@@ -32,7 +32,7 @@
 
 %% export givers
 -export([
-  param/2, host/1, port/1
+  param/2, host/1, port/1, timeout/1
 ]).
 
 %% export requesters
@@ -100,14 +100,21 @@ request(Requester) -> Requester.
 then(Asserts) when is_list(Asserts) ->
   fun(Describe, Response) ->
     Result =
-      lists:foldl(
-        fun
-          (Assert, {ok, _}) -> Assert(Describe, Response);
-          (_Assert, Fail)   -> Fail
-        end,
-        {ok, {}},
-        Asserts
-      ),
+      case erest_response:is_valid(Response) of
+        true ->
+          lists:foldl(
+            fun
+              (Assert, {ok, _}) -> Assert(Describe, Response);
+              (_Assert, Fail)   -> Fail
+            end,
+            {ok, {}},
+            Asserts
+          );
+
+        false ->
+          {fail, {Describe, "unreachable"}}
+      end,
+
     print_assert(Result),
     {IsOK, Asserted} = Result,
     {IsOK, Asserted, Response}
@@ -133,6 +140,12 @@ host(Host) ->
 port(Port) ->
   fun(Request) ->
     erest_request:port(Port, Request)
+  end.
+
+-spec timeout(pos_integer()) -> giver().
+timeout(Time) ->
+  fun(Request) ->
+    erest_request:timeout(Time, Request)
   end.
 
 -spec get(string()) -> requester().

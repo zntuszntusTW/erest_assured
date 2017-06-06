@@ -161,6 +161,7 @@ tester_tests(_) ->
   ResponseJSONInteger  = erest_response:body(?JSONInteger, Response0),
   ResponseJSONFloat  = erest_response:body(?JSONFloat, Response0),
   ResponseJSONNested  = erest_response:body(?JSONNested, Response0),
+  ResponseError = {error, {}},
 
   etest:tests([
     {?LINE, [
@@ -312,6 +313,11 @@ tester_tests(_) ->
       {describe, "generate json has_key nested key tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:has_key("key.nested"))] ))(?Describe, ResponseJSONNested) )},
       {should_be, {ok, {?Describe, "key.nested should be exist"}, ResponseJSONNested}}
+    ]},
+    {?LINE, [
+      {describe, "generate invalid response"},
+      {run, ?_f( (erest_assured:then( [erest_assured:status_code(erest_assured:equal_to(200))] ))(?Describe, ResponseError) )},
+      {should_be, {fail, {?Describe, "unreachable"}, ResponseError}}
     ]}
   ]).
 

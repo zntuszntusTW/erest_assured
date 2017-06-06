@@ -23,7 +23,7 @@
 -type response() :: #response{}.
 
 %% API
--export([new/0]).
+-export([is_valid/1, new/0]).
 
 -export([
   time_duration/1, time_duration/2,
@@ -32,6 +32,10 @@
   body/1, body/2, body_as_json/1,
   is_json/1,
   to_proplist/1]).
+
+-spec is_valid(term()) -> boolean().
+is_valid(Response) ->
+  is_record(Response, response).
 
 -spec new() -> response().
 new() -> #response{}.
