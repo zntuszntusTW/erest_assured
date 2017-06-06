@@ -208,14 +208,14 @@ less_than(Key, Expected) ->
 -spec equal_to(term()) -> tester().
 equal_to(Expected) ->
   fun(What, Describe, Value) ->
-    assert_it(Describe, string_combine([What, " should be equal with expected value"]), Expected, Value, Expected =:= Value)
+    assert_it(Describe, string_combine([What, " should be equal to expected value"]), Expected, Value, Expected =:= Value)
   end.
 
 -spec equal_to(string(), term()) -> tester().
 equal_to(Key, Expected) ->
   fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
-    assert_it(Describe, string_combine([Key, " should be equal with expected value"]), Expected, Value, Expected =:= Value)
+    assert_it(Describe, string_combine([Key, " should be equal to expected value"]), Expected, Value, Expected =:= Value)
   end.
 
 -spec is_json() -> tester().
