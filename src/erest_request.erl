@@ -140,16 +140,18 @@ execute(Request) ->
     timeout(Request), []),
   TimeAfterRequest = get_timestamp(),
 
-  case Result of
-    {ok, {{StatusCode, _Status}, Headers, Body}} ->
-      Response1 = erest_response:status_code(StatusCode, Response0),
-      Response2 = erest_response:headers(Headers, Response1),
-      Response3 = erest_response:time_duration(TimeAfterRequest - TimeBeforeRequest, Response2),
-      Response  = erest_response:body(Body, Response3),
-      Response;
-    _ ->
-      {error, Result}
-  end.
+  Response =
+    case Result of
+      {ok, {{StatusCode, _Status}, Headers, Body}} ->
+        Response1 = erest_response:status_code(StatusCode, Response0),
+        Response2 = erest_response:headers(Headers, Response1),
+        Response3 = erest_response:time_duration(TimeAfterRequest - TimeBeforeRequest, Response2),
+        erest_response:body(Body, Response3);
+      _ ->
+        erest_response:new_unreachable()
+    end,
+
+  Response.
 
 -spec to_proplist(request()) -> list().
 to_proplist(Request) ->
