@@ -74,7 +74,10 @@ is_json(Response) ->
 
 -spec to_proplist(response()) -> list().
 to_proplist({error, _}) ->
-  [{error, "unreachable"}];
+  [ {status_code, -1},
+    {headers, undefined},
+    {time_duration, -1},
+    {body, undefined} ];
 to_proplist(Response) ->
   Body =
     case is_json(Response) of
