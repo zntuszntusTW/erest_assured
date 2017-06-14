@@ -27,7 +27,7 @@
   assured/4,
   given/1,
   request/1,
-  then/1
+  then/1, then/2
 ]).
 
 %% export givers
@@ -97,7 +97,10 @@ given(Givers) when is_list(Givers) ->
 request(Requester) -> Requester.
 
 -spec then(asserts()) -> function().
-then(Asserts) when is_list(Asserts) ->
+then(Asserts) -> then(Asserts, []).
+
+-spec then(asserts(), list()) -> function().
+then(Asserts, Opts) when is_list(Asserts) ->
   fun(Describe, Response) ->
     Result =
       case erest_response:is_valid(Response) andalso erest_response:is_reachable(Response) of
@@ -115,7 +118,11 @@ then(Asserts) when is_list(Asserts) ->
           {fail, {Describe, "unreachable"}}
       end,
 
-    print_assert(Result),
+    case list_some(silent, Opts) of
+      true -> silent;
+      false -> print_assert(Result)
+    end,
+
     {IsOK, Asserted} = Result,
     {IsOK, Asserted, Response}
   end.
@@ -379,3 +386,12 @@ string_combine([H|T]) when is_binary(H) ->
   string_combine([binary_to_list(H)|T]);
 string_combine([H|T]) ->
   H ++ string_combine(T).
+
+list_some(_Item, []) -> false;
+list_some(Fun, [H | T]) when is_function(Fun) ->
+  case Fun(H) of
+    true -> ture;
+    _ -> list_some(Fun, T)
+  end;
+list_some(Item, [H | _]) when H==Item -> true;
+list_some(Item, [_ | T]) -> list_some(Item, T).
