@@ -47,7 +47,9 @@
 
 %% export testers
 -export([
-  equal_to/1, equal_to/2, greater_than/1, greater_than/2, less_than/1, less_than/2,
+  equal_to/1, equal_to/2,
+  greater_than/1, greater_than/2, greater_than_or_equal_to/1, greater_than_or_equal_to/2,
+  less_than/1, less_than/2, less_than_or_equal_to/1, less_than_or_equal_to/2,
   is_json/0, should_be_json/0,
   should_be_string/1, should_be_integer/1, should_be_float/1, should_be_number/1, should_be_list/1,
   has_key/1
@@ -218,6 +220,19 @@ greater_than(Key, Expected) ->
     assert_it(Describe, string_combine([Key, " should be greater than expected value"]), Expected, Value, Expected < Value)
   end.
 
+-spec greater_than_or_equal_to(number()) -> tester().
+greater_than_or_equal_to(Expected) ->
+  fun(What, Describe, Value) ->
+    assert_it(Describe, string_combine([What, " should be greater than or equal to expected value"]), Expected, Value, Expected =< Value)
+  end.
+
+-spec greater_than_or_equal_to(string(), number()) -> tester().
+greater_than_or_equal_to(Key, Expected) ->
+  fun(json, Describe, JSON) ->
+    Value = get_value_by_json_path(JSON, Key),
+    assert_it(Describe, string_combine([Key, " should be greater than or equal to expected value"]), Expected, Value, Expected =< Value)
+  end.
+
 -spec less_than(number()) -> tester().
 less_than(Expected) ->
   fun(What, Describe, Value) ->
@@ -229,6 +244,19 @@ less_than(Key, Expected) ->
   fun(json, Describe, JSON) ->
     Value = get_value_by_json_path(JSON, Key),
     assert_it(Describe, string_combine([Key, " should be less than expected value"]), Expected, Value, Expected > Value)
+  end.
+
+-spec less_than_or_equal_to(number()) -> tester().
+less_than_or_equal_to(Expected) ->
+  fun(What, Describe, Value) ->
+    assert_it(Describe, string_combine([What, " should be less than or equal to expected value"]), Expected, Value, Expected >= Value)
+  end.
+
+-spec less_than_or_equal_to(string(), number()) -> tester().
+less_than_or_equal_to(Key, Expected) ->
+  fun(json, Describe, JSON) ->
+    Value = get_value_by_json_path(JSON, Key),
+    assert_it(Describe, string_combine([Key, " should be less than or equal to expected value"]), Expected, Value, Expected >= Value)
   end.
 
 -spec equal_to(term()) -> tester().

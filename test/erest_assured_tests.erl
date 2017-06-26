@@ -245,6 +245,16 @@ tester_tests(_) ->
       {should_be, {fail, {?Describe, "key should be greater than expected value", 123, 123}, ResponseJSONInteger}}
     ]},
     {?LINE, [
+      {describe, "generate json greater_than_or_equal_to right tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:greater_than_or_equal_to("key", 123))] ))(?Describe, ResponseJSONInteger) )},
+      {should_be, {ok, {?Describe, "key should be greater than or equal to expected value", 123, 123}, ResponseJSONInteger}}
+    ]},
+    {?LINE, [
+      {describe, "generate json greater_than_or_equal_to wrong tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:greater_than_or_equal_to("key", 124))] ))(?Describe, ResponseJSONInteger) )},
+      {should_be, {fail, {?Describe, "key should be greater than or equal to expected value", 124, 123}, ResponseJSONInteger}}
+    ]},
+    {?LINE, [
       {describe, "generate json less_than right tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:less_than("key", 124))] ))(?Describe, ResponseJSONInteger) )},
       {should_be, {ok, {?Describe, "key should be less than expected value", 124, 123}, ResponseJSONInteger}}
@@ -253,6 +263,16 @@ tester_tests(_) ->
       {describe, "generate json less_than wrong tester"},
       {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:less_than("key", 123))] ))(?Describe, ResponseJSONInteger) )},
       {should_be, {fail, {?Describe, "key should be less than expected value", 123, 123}, ResponseJSONInteger}}
+    ]},
+    {?LINE, [
+      {describe, "generate json less_than_or_equal_to right tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:less_than_or_equal_to("key", 123))] ))(?Describe, ResponseJSONInteger) )},
+      {should_be, {ok, {?Describe, "key should be less than or equal to expected value", 123, 123}, ResponseJSONInteger}}
+    ]},
+    {?LINE, [
+      {describe, "generate json less_than_or_equal_to wrong tester"},
+      {run, ?_f( (erest_assured:then( [erest_assured:json(erest_assured:less_than_or_equal_to("key", 122))] ))(?Describe, ResponseJSONInteger) )},
+      {should_be, {fail, {?Describe, "key should be less than or equal to expected value", 122, 123}, ResponseJSONInteger}}
     ]},
     {?LINE, [
       {describe, "generate json should_be_string right tester"},
