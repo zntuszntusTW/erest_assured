@@ -3,3 +3,4 @@ ebin/
 out/
 .idea/
 .rebar/
+start.bat
