@@ -32,7 +32,7 @@
 
 %% export givers
 -export([
-  param/2, host/1, port/1, timeout/1
+  param/2, host/1, port/1, timeout/1, request_body/1
 ]).
 
 %% export requesters
@@ -149,6 +149,12 @@ host(Host) ->
 port(Port) ->
   fun(Request) ->
     erest_request:port(Port, Request)
+  end.
+
+-spec request_body(bitstring()) -> giver().
+request_body(Value) ->
+  fun(Request) ->
+    erest_request:body(Value, Request)
   end.
 
 -spec timeout(pos_integer()) -> giver().
