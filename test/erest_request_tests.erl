@@ -37,10 +37,14 @@
 
 
 erest_request_test_() ->
-  {foreach, fun start/0, fun stop/1, [
-    fun execute_input_tests/1,
-    fun execute_output_tests/1
-  ]}.
+  etest:foreach(
+    fun start/0,
+    fun stop/1,
+    [
+      fun execute_input_tests/1,
+      fun execute_output_tests/1
+    ]
+  ).
 
 
 %%==============================================================================
@@ -49,10 +53,10 @@ erest_request_test_() ->
 
 
 start() ->
-  meck:new(lhttpc).
+  etest:mock_load(lhttpc).
 
 stop(_) ->
-  meck:unload(lhttpc).
+  etest:mock_unload(lhttpc).
 
 
 %%==============================================================================

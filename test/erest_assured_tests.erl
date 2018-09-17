@@ -33,13 +33,13 @@
 
 
 erest_assured_test_() ->
-  {foreach, fun start/0, fun stop/1, [
+  etest:foreach(fun start/0, fun stop/1, [
     fun requester_tests/1,
     fun giver_tests/1,
     fun tester_tests/1,
     fun getter_testes/1,
     fun erest_assured_tests/1
-  ]}.
+  ]).
 
 
 %%==============================================================================
@@ -48,10 +48,10 @@ erest_assured_test_() ->
 
 
 start() ->
-  meck:new(erest_request, [passthrough]).
+  etest:mock_load(erest_request, [passthrough]).
 
 stop(_) ->
-  meck:unload(erest_request).
+  etest:mock_unload(erest_request).
 
 
 %%==============================================================================

@@ -14,6 +14,8 @@
 %% API
 -export([tests/1, test/1]).
 -export([assert_equal/2, assert/1]).
+-export([mock_load/1, mock_load/2, mock_unload/1]).
+-export([foreach/3, setup/3]).
 
 test({Line, Test}) ->
   Describe = proplists:get_value(describe,Test,undefined),
@@ -38,6 +40,17 @@ tests([H|T], Acc) -> tests(T, [test(H) | Acc]).
 
 assert_equal(Expected, Value) -> ?assertEqual(Expected, Value).
 assert(Expr) -> ?assert(Expr).
+
+mock_load(Module) -> meck:new(Module).
+mock_load(Module, Config) -> meck:new(Module, Config).
+mock_unload(Module) -> meck:unload(Module).
+
+foreach(StartFun, StopFun, Tests) ->
+  {foreach, StartFun, StopFun, Tests}.
+
+setup(StartFun, StopFun, Tests) ->
+  {setup, StartFun, StopFun, Tests}.
+
 
 %%
 %% internal functions
